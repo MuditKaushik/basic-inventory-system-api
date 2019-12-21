@@ -21,22 +21,43 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "arrow-spacing": "warn",
-        "camelcase": "error",
-        "brace-style": "warn",
-        "class-methods-use-this": "warn",
-        "comma-dangle": "error",
-        "comma-spacing": "warn",
-        "complexity": "warn",
-        "consistent-return": "warn",
-        "default-case": "warn",
-        "func-style": "warn",
-        "getter-return":"error",
-        "eqeqeq":"warn",
-        "indent":"warn",
-        "eol-last":"warn",
-        "key-spacing":"warn",
-        "line-comment-position":"warn",
-        "curly":"warn"
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "no-multi-spaces": "error",
+        "camelcase": [
+            "error",
+            {
+                "properties": "never",
+                "ignoreDestructuring": true
+            }
+        ],
+        "curly": [
+            "error",
+            "multi",
+            "consistent"
+        ],
+        "object-curly-spacing": [
+            "warn",
+            "always",
+            {
+                "arraysInObjects": true,
+                "objectsInObjects": true
+            }
+        ],
+        "array-bracket-spacing": [
+            "warn",
+            "never",
+            {
+                "arraysInArrays": true,
+                "objectsInArrays": true
+            }
+        ],
+        "no-unused-vars": "off"
     }
 }

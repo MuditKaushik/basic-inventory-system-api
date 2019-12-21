@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build_api",
+            "command": [
+                "npm run build"
+            ],
+            "type": "shell",
+            "args": [],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "watcher",
+            "type": "shell",
+            "dependsOn":["build_api"],
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build"
+        }
+    ]
+}

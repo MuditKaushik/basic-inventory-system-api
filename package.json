@@ -4,7 +4,10 @@
   "description": "basic inventory rest api for creating,quering and deleting products.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build && node ./build/server.js",
+    "build": "npm run eslint && tsc",
+    "eslint": "npx eslint --ext .ts ./api"
   },
   "repository": {
     "type": "git",
@@ -17,16 +20,25 @@
   },
   "homepage": "https://github.com/MuditKaushik/basic-inventory-system-api#readme",
   "dependencies": {
+    "@hapi/joi": "^16.1.8",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mssql": "^6.0.1",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "sequelize": "^5.21.3",
+    "sequelize-cli": "^5.5.1",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.2",
-    "@types/mysql": "^2.15.8",
+    "@types/hapi__joi": "^16.0.4",
+    "@types/mssql": "^6.0.0",
     "@types/node": "^12.12.21",
+    "@types/sequelize": "^4.28.8",
+    "@types/uuid": "^3.4.6",
     "@typescript-eslint/eslint-plugin": "^2.12.0",
     "@typescript-eslint/parser": "^2.12.0",
     "eslint": "^6.8.0",

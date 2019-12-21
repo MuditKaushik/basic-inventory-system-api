@@ -106,3 +106,4 @@ dist
 # Project files to be ignored
 package-lock.json
 build
+api/inventory-db/config/config.json
