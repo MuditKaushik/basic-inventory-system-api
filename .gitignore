@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Project files to be ignored
+package-lock.json
+build

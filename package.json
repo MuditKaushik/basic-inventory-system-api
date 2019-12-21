@@ -1,0 +1,35 @@
+{
+  "name": "basic-inventory-system-api",
+  "version": "1.0.0",
+  "description": "basic inventory rest api for creating,quering and deleting products.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuditKaushik/basic-inventory-system-api.git"
+  },
+  "author": "MuditKaushik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MuditKaushik/basic-inventory-system-api/issues"
+  },
+  "homepage": "https://github.com/MuditKaushik/basic-inventory-system-api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mssql": "^6.0.1",
+    "rxjs": "^6.5.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.2",
+    "@types/mysql": "^2.15.8",
+    "@types/node": "^12.12.21",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "eslint": "^6.8.0",
+    "typescript": "^3.7.4"
+  }
+}
