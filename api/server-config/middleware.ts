@@ -1,6 +1,9 @@
 import { ObjectSchema } from '@hapi/joi';
+import { map } from 'rxjs/operators';
+import { getBearerToken, validateModel } from '../utilities/util-methods';
 import { Request, Response, NextFunction } from 'express';
-import { InventoryManager } from '../inventory-handlers/inventory-manager';
+import { HandlerManagers } from '../handlers/handler-managers';
+import { userValidationSchema } from '../utilities/validation-schemas';
 
 export interface IModelError {
     field: string;
@@ -11,54 +14,56 @@ export let modelValidator = function (validationSchema: ObjectSchema) {
     return (req: Request, res: Response, next: NextFunction): void => {
         let validationErrors = validateModel(validationSchema, req.body);
         if (validationErrors.length > 0) {
-            res.status(401).send(validationErrors);
+            res.status(400).send(validationErrors);
             return next(validationErrors);
         }
-        return next();
+        next();
+    }
+}
+
+export let paramValidator = function (validationSchema: ObjectSchema, params: Array<string>) {
+    return (req: Request, res: Response, next: NextFunction): void => {
+        let validationErrors: Array<IModelError> = new Array<IModelError>();
+        for (let i = 0; i < params.length; i++) {
+            let objects: any = {};
+            objects[params[i]] = req.param(params[i]);
+            validationErrors.push(...validateModel(validationSchema, objects));
+        }
+        if (validationErrors.length > 0) {
+            res.status(400).send(validationErrors);
+            return next(validationErrors);
+        }
+        next();
     }
 }
 
 export function userValidator(req: Request, res: Response, next: NextFunction): void {
-    let manager = new InventoryManager();
+    let manager = new HandlerManagers();
     let token = getBearerToken(req);
     if (token) {
-        manager.queryManager.getInventoryProductsByUserId(token)
-            .subscribe((exists) => {
-                if (!exists) {
-                    res.status(403).send('forbidden');
-                    return next('forbidden');
+        manager.accountQueryManager.getUserByUserId(token).pipe(
+            map((user) => {
+                let validationError: Array<IModelError> = new Array<IModelError>();
+                if (user != null) {
+                    validationError = validateModel(userValidationSchema, user);
                 } else {
-                    next();
+                    validationError.push({
+                        field: 'user',
+                        message: 'Invalid user'
+                    });
                 }
-            });
+                return validationError;
+            })
+        ).subscribe((error: Array<IModelError>) => {
+            if (error.length > 0) {
+                res.status(401).send(error);
+                return next(error);
+            }
+            next();
+        });
     }
     else {
         res.status(401).send('Unauthorized request');
-        return next('Unauthorized request');
+        next('Unauthorized request');
     }
-}
-
-function getBearerToken(req: Request): string {
-    let headerToken = req.headers.authorization;
-    let bearerString = 'bearer';
-    if (headerToken) {
-        let token = headerToken.match(new RegExp(`${bearerString}`, 'gi'));
-        if (token && token.length > 0)
-            headerToken = headerToken.replace(bearerString, '');
-        return headerToken.trim();
-    } else {
-        return '';
-    }
-}
-
-function validateModel(schema: ObjectSchema, requestObject: any) {
-    let modelErrors: Array<IModelError> = new Array<IModelError>();
-    let validationErrors = schema.validate(requestObject, { convert: false });
-    modelErrors = validationErrors.error.details.map((detail) => {
-        return <IModelError>{
-            field: detail.context?.key!,
-            message: detail.message
-        }
-    });
-    return modelErrors;
 }

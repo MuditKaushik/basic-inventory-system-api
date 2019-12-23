@@ -2,11 +2,22 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import { ConfigureServer } from './server-config/config';
 import cors from 'cors';
+
+const serverCORS: cors.CorsOptions = {
+    allowedHeaders: '*',
+    preflightContinue: false,
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    exposedHeaders: 'location',
+    optionsSuccessStatus: 200,
+    maxAge: 3200,
+    origin: '*'
+}
 const app: express.Application = express();
-let serverConfig = new ConfigureServer(app);
-app.use(bodyParser.json({ strict: true }));
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors(serverConfig.cors));
+app.use(cors(serverCORS));
+new ConfigureServer(app);
 app.listen(1800, 'localhost', () => {
     console.log(`app listing at ${1800}`);
 });

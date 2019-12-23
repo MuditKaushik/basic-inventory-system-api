@@ -23,7 +23,10 @@
     "rules": {
         "quotes": [
             "error",
-            "single"
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
         ],
         "eol-last": [
             "error",
@@ -39,8 +42,7 @@
         ],
         "curly": [
             "error",
-            "multi",
-            "consistent"
+            "all"
         ],
         "object-curly-spacing": [
             "warn",
