@@ -4,10 +4,8 @@ import { ConfigureServer } from './server-config/config';
 import cors from 'cors';
 
 const serverCORS: cors.CorsOptions = {
-    allowedHeaders: '*',
     preflightContinue: false,
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
-    exposedHeaders: 'location',
     optionsSuccessStatus: 200,
     maxAge: 3200,
     origin: '*'

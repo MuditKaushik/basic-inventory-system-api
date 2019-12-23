@@ -21,6 +21,22 @@ export let modelValidator = function (validationSchema: ObjectSchema) {
     }
 }
 
+export let modelValidatorByField = function (validationSchema: ObjectSchema, fields: Array<string>) {
+    return (req: Request, res: Response, next: NextFunction): void => {
+        let validationErrors: Array<IModelError> = new Array<IModelError>();
+        for (let param of fields) {
+            for (let id of req.body[param]) {
+                validationErrors.push(...validateModel(validationSchema, { id: id }));
+            }
+        }
+        if (validationErrors.length > 0) {
+            res.status(400).send(validationErrors);
+            return next(validationErrors);
+        }
+        next();
+    }
+}
+
 export let paramValidator = function (validationSchema: ObjectSchema, params: Array<string>) {
     return (req: Request, res: Response, next: NextFunction): void => {
         let validationErrors: Array<IModelError> = new Array<IModelError>();

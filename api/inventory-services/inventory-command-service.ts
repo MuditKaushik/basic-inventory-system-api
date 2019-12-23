@@ -5,7 +5,7 @@ import { IProductModel } from '../inventory-model';
 
 export interface IInventoryCommandService {
     addProduct(product: IProductModel): Observable<boolean>;
-    deleteProduct(productId: string): Observable<boolean>;
+    deleteProduct(productIds: Array<string>): Observable<boolean>;
 }
 export class InventoryCommandService implements IInventoryCommandService {
     private readonly _commandContext: IInventoryCommandContext;
@@ -15,7 +15,7 @@ export class InventoryCommandService implements IInventoryCommandService {
     addProduct(product: IProductModel): Observable<boolean> {
         return this._commandContext.addProduct(product).pipe(map(isCreated => isCreated));
     }
-    deleteProduct(productId: string): Observable<boolean> {
-        return this._commandContext.deleteProduct(productId).pipe(map(isDeleted => isDeleted));
+    deleteProduct(productIds: Array<string>): Observable<boolean> {
+        return this._commandContext.deleteProduct(productIds).pipe(map(isDeleted => isDeleted));
     }
 }

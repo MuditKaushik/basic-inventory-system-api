@@ -8,7 +8,7 @@ import { errorLogger } from '../utilities/error-logger';
 
 export interface IInventoryCommandContext {
     addProduct(product: IProductModel): Observable<boolean>;
-    deleteProduct(productId: string): Observable<boolean>;
+    deleteProduct(productIds: Array<string>): Observable<boolean>;
 }
 export class InventoryCommandContext implements IInventoryCommandContext {
     private readonly _dbContext: IInventoryDBContext;
@@ -60,21 +60,21 @@ export class InventoryCommandContext implements IInventoryCommandContext {
             catchError(err => errorLogger({ actualError: err, message: 'Error in inventory-command-context', method: 'addProduct' }))
         );
     }
-    deleteProduct(productId: string): Observable<boolean> {
-        let deleteProductCommand: string = `DELETE FROM products WHERE id = @productId`;
+    deleteProduct(productIds: Array<string>): Observable<boolean> {
+        let deleteProductCommand: string = `DELETE FROM products WHERE id in (@productIds)`;
         let connection: ConnectionPool, transaction: Transaction, preparedStatement: PreparedStatement, isDeleted: boolean = false;
         return this._dbContext.getConnection().pipe(
             map((dbConnection: ConnectionPool) => {
                 connection = dbConnection;
                 transaction = connection.transaction();
                 preparedStatement = this._dbContext.getPreparedStatement(transaction);
-                preparedStatement.input('productId', TYPES.UniqueIdentifier);
+                preparedStatement.input('productIds', TYPES.UniqueIdentifier);
             }),
             flatMap(() => {
                 return from(transaction.begin()).pipe(flatMap(isbegin => from(preparedStatement.prepare(deleteProductCommand))));
             }),
             flatMap(() => {
-                return from(preparedStatement.execute({ productId: productId }));
+                return from(preparedStatement.execute({ productIds: productIds.join(',') }));
             }),
             flatMap((result: IProcedureResult<any>) => {
                 isDeleted = (result.rowsAffected[0] > 0);
