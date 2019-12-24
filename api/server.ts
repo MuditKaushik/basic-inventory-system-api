@@ -8,10 +8,10 @@ const serverCORS: cors.CorsOptions = {
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
     optionsSuccessStatus: 200,
     maxAge: 3200,
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
     origin: '*'
 }
 const app: express.Application = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(serverCORS));
